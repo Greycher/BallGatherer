@@ -108,7 +108,7 @@ namespace BallGatherer {
         private void Update() {
             if (_pointerID != NonePointerID) {
                 UpdateJoyPadAnimation();
-                if (_controller != null) {
+                if (_controller != null && _dragDirection != Vector2.zero) {
                     _controller.Drag(_dragDirection);
                 }
             }
