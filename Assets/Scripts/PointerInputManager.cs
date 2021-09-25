@@ -18,7 +18,7 @@ namespace BallGatherer {
 
         private RectTransform _canvasTr;
         private Vector2 _dpi;
-        private Vector2 _weightedDragDirection;
+        private Vector2 _dragDirection;
         private int _pointerID = NonePointerID;
 
         private void Awake() {
@@ -76,7 +76,7 @@ namespace BallGatherer {
         public void OnPointerUp(PointerEventData eventData) {
             if (eventData.pointerId == _pointerID) {
                 _pointerID = NonePointerID;
-                _weightedDragDirection = Vector2.zero;
+                _dragDirection = Vector2.zero;
                 DisableJoyPad();
             }
         }
@@ -90,7 +90,7 @@ namespace BallGatherer {
         private void Drag(Vector2 pressPosition, Vector2 pointerPosition) {
             var deltaPosition = pointerPosition - pressPosition;
             var deltaInch = deltaPosition / _dpi;
-            _weightedDragDirection = new Vector2(
+            _dragDirection = new Vector2(
                 Normalize(Mathf.Abs(deltaInch.x), horizontalDragBoundsInInches.x, horizontalDragBoundsInInches.y) * Mathf.Sign(deltaInch.x),
                 Normalize(Mathf.Abs(deltaInch.y), verticalDragBoundsInInches.x, verticalDragBoundsInInches.y) * Mathf.Sign(deltaInch.y));
         }
@@ -109,17 +109,17 @@ namespace BallGatherer {
             if (_pointerID != NonePointerID) {
                 UpdateJoyPadAnimation();
                 if (_controller != null) {
-                    _controller.Drag(_weightedDragDirection);
+                    _controller.Drag(_dragDirection);
                 }
             }
         }
 
         private void UpdateJoyPadAnimation() {
             joyPadAnimator.SetFloat(horizontalParamName,
-                Mathf.MoveTowards(joyPadAnimator.GetFloat(horizontalParamName), _weightedDragDirection.x,
+                Mathf.MoveTowards(joyPadAnimator.GetFloat(horizontalParamName), _dragDirection.x,
                     animSpeed * Time.deltaTime));
             joyPadAnimator.SetFloat(verticalParamName,
-                Mathf.MoveTowards(joyPadAnimator.GetFloat(verticalParamName), _weightedDragDirection.y,
+                Mathf.MoveTowards(joyPadAnimator.GetFloat(verticalParamName), _dragDirection.y,
                     animSpeed * Time.deltaTime));
         }
     }
