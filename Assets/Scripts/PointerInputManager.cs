@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace BallGatherer {
     [RequireComponent(typeof(Canvas))]
-    public class PointerInputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler {
+    public class PointerInputManager : InputManager, IPointerDownHandler, IPointerUpHandler, IDragHandler {
         public RectTransform joyPad;
         public Vector2 horizontalDragBoundsInInches = new Vector2(0.05f, 0.2f);
         public Vector2 verticalDragBoundsInInches = new Vector2(0.05f, 0.2f);
@@ -15,20 +15,18 @@ namespace BallGatherer {
         public float animSpeed = 12;
         
         private const int NonePointerID = Int32.MinValue;
-        private int _firstPointerID;
-    
-        private Vector2 _firstPointedPosition;
-        private Vector2 _dpi;
-        private Vector2 _input;
+
         private RectTransform _canvasTr;
+        private Vector2 _dpi;
+        private Vector2 _weightedDragDirection;
+        private int _pointerID = NonePointerID;
 
         private void Awake() {
-            _firstPointerID = NonePointerID;
             _dpi = GetDPI();
             _canvasTr = transform as RectTransform;
             DisableJoyPad();
         }
-        
+
         private Vector2 GetDPI() {
             Vector2 dpi;
             //Unity documents notes that dpi value could be wrong in android devices
@@ -50,9 +48,8 @@ namespace BallGatherer {
         }
 
         public void OnPointerDown(PointerEventData eventData) {
-            if (_firstPointerID == NonePointerID) {
-                _firstPointerID = eventData.pointerId;
-                _firstPointedPosition = eventData.position;
+            if (_pointerID == NonePointerID) {
+                _pointerID = eventData.pointerId;
                 EnableJoyPadAt(eventData.position);
             }
         }
@@ -71,15 +68,15 @@ namespace BallGatherer {
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData) {
-            if(_firstPointerID == eventData.pointerId) {
-                Drag(eventData.position);
+            if(eventData.pointerId == _pointerID) {
+                Drag(eventData.pressPosition, eventData.position);
             }
         }
     
         public void OnPointerUp(PointerEventData eventData) {
-            if (eventData.pointerId == _firstPointerID) {
-                _firstPointerID = NonePointerID;
-                _input = Vector2.zero;
+            if (eventData.pointerId == _pointerID) {
+                _pointerID = NonePointerID;
+                _weightedDragDirection = Vector2.zero;
                 DisableJoyPad();
             }
         }
@@ -90,10 +87,10 @@ namespace BallGatherer {
             joyPadAnimator.SetFloat(verticalParamName, 0);
         }
 
-        private void Drag(Vector2 pointedPosition) {
-            var deltaPosition = pointedPosition - _firstPointedPosition;
+        private void Drag(Vector2 pressPosition, Vector2 pointerPosition) {
+            var deltaPosition = pointerPosition - pressPosition;
             var deltaInch = deltaPosition / _dpi;
-            _input = new Vector2(
+            _weightedDragDirection = new Vector2(
                 Normalize(Mathf.Abs(deltaInch.x), horizontalDragBoundsInInches.x, horizontalDragBoundsInInches.y) * Mathf.Sign(deltaInch.x),
                 Normalize(Mathf.Abs(deltaInch.y), verticalDragBoundsInInches.x, verticalDragBoundsInInches.y) * Mathf.Sign(deltaInch.y));
         }
@@ -109,10 +106,21 @@ namespace BallGatherer {
         }
         
         private void Update() {
-            if (joyPad.gameObject.activeSelf) {
-                joyPadAnimator.SetFloat(horizontalParamName, Mathf.MoveTowards(joyPadAnimator.GetFloat(horizontalParamName), _input.x, animSpeed * Time.deltaTime));
-                joyPadAnimator.SetFloat(verticalParamName, Mathf.MoveTowards(joyPadAnimator.GetFloat(verticalParamName), _input.y, animSpeed * Time.deltaTime));
-            }   
+            if (_pointerID != NonePointerID) {
+                UpdateJoyPadAnimation();
+                if (_controller != null) {
+                    _controller.Drag(_weightedDragDirection);
+                }
+            }
+        }
+
+        private void UpdateJoyPadAnimation() {
+            joyPadAnimator.SetFloat(horizontalParamName,
+                Mathf.MoveTowards(joyPadAnimator.GetFloat(horizontalParamName), _weightedDragDirection.x,
+                    animSpeed * Time.deltaTime));
+            joyPadAnimator.SetFloat(verticalParamName,
+                Mathf.MoveTowards(joyPadAnimator.GetFloat(verticalParamName), _weightedDragDirection.y,
+                    animSpeed * Time.deltaTime));
         }
     }
 }

@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterMotor : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
+namespace BallGatherer {
+    [RequireComponent(typeof(Rigidbody))]
+    public class CharacterMotor : MonoBehaviour {
+        public Rigidbody rb;
+        public float speed;
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Move(Vector3 weightedDirection) {
+            rb.MovePosition(rb.position + weightedDirection * speed * Time.deltaTime);
+        }
     }
 }
+
