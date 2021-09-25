@@ -10,6 +10,7 @@ namespace BallGatherer {
         }
 
         public void Drag(Vector2 weightedDragDirection) {
+            weightedDragDirection = weightedDragDirection.magnitude > 1 ? weightedDragDirection.normalized : weightedDragDirection;
             _motor.Move(Map2DInputTo3D(weightedDragDirection));
         }
 

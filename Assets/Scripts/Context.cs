@@ -5,6 +5,10 @@ namespace BallGatherer {
         private const string PLAYER_TAG = "Player";
         private void Awake() {
             var playerController = GameObject.FindGameObjectWithTag(PLAYER_TAG).GetComponent<CharacterController>();
+            var targetFollowers = GetComponentsInChildren<TargetFollower>();
+            for (int i = 0; i < targetFollowers.Length; i++) {
+                targetFollowers[i].AssignTargetTransform(playerController.transform);
+            }
             var inputManagers = GetComponentsInChildren<InputManager>();
             for (int i = 0; i < inputManagers.Length; i++) {
                 inputManagers[i].AssignController(playerController);
