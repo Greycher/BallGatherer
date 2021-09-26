@@ -5,6 +5,13 @@ using UnityEngine.EventSystems;
 namespace BallGatherer {
     [RequireComponent(typeof(Canvas))]
     public class PointerInputManager : InputManager, IPointerDownHandler, IPointerUpHandler, IDragHandler {
+        private const string key = nameof(PointerInputManager);
+        
+        public static PointerInputManager GetForLevel(Level level) {
+            level.TryGetLevelObjectFromDictionary(key, out PointerInputManager inputManager);
+            return inputManager;
+        }
+
         public RectTransform joyPad;
         public Vector2 horizontalDragBoundsInInches = new Vector2(0.05f, 0.2f);
         public Vector2 verticalDragBoundsInInches = new Vector2(0.05f, 0.2f);
@@ -16,18 +23,19 @@ namespace BallGatherer {
         
         private const int NonePointerID = Int32.MinValue;
 
-        private RectTransform _canvasTr;
         private Canvas _canvas;
         private Vector2 _dpi;
         private Vector2 _dragDirection;
         private int _pointerID = NonePointerID;
-
-        private void Awake() {
+        
+        public override void Initialize(Level level) {
+            level.AddLevelObjectToDictionary(key, this);
             _dpi = GetDPI();
             _canvas = GetComponent<Canvas>();
-            _canvasTr = transform as RectTransform;
             DisableJoyPad();
         }
+
+        public override void Prepare(Level level) { }
 
         private Vector2 GetDPI() {
             Vector2 dpi;

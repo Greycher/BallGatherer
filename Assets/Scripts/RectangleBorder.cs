@@ -1,8 +1,15 @@
-using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BallGatherer {
-    public class RectangleBorder : MonoBehaviour {
+    public class RectangleBorder : LevelObject {
+        private const string key = nameof(RectangleBorder);
+        
+        public static RectangleBorder GetForLevel(Level level) {
+            level.TryGetLevelObjectFromDictionary(key, out RectangleBorder border);
+            return border;
+        }
+        
         public float width;
         public float height;
         public Transform rightCubeTr;
@@ -11,6 +18,14 @@ namespace BallGatherer {
         public Transform topCubeTr;
         public float wallHeight;
         public float wallWidth;
+
+
+        
+        public override void Initialize(Level level) {
+            level.AddLevelObjectToDictionary(key, this);
+        }
+
+        public override void Prepare(Level level) { }
 
         public void SetupBorder() {
             SetupRightAndLeftBorder();
@@ -48,6 +63,12 @@ namespace BallGatherer {
         
         public Vector3 GetMaxPosition() {
             return transform.TransformPoint(new Vector3(width * 0.5f, 0, height * 0.5f));
+        }
+
+        public Vector3 GetRandomPointInBounds() {
+            var minPos = GetMinPosition();
+            var maxPos = GetMaxPosition();
+            return new Vector3(Random.Range(minPos.x, maxPos.x), Random.Range(minPos.y, maxPos.y), 0);
         }
     }
 }

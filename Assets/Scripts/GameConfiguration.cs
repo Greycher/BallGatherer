@@ -4,9 +4,16 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "GameConfiguration")]
 public class GameConfiguration : ScriptableObject {
-    public static GameConfiguration GetGameConfiguration() {
-        return Resources.Load<GameConfiguration>(nameof(GameConfiguration));
+    public static GameConfiguration Instance {
+        get {
+            if (_instance == null) {
+                _instance = Resources.Load<GameConfiguration>(nameof(GameConfiguration));
+            }
+            return _instance;
+        }
     }
     
-    [TagSelectorAttribute] public string playerTag;
+    private static GameConfiguration _instance;
+
+    public GameObject ballRes;
 }

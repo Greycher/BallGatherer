@@ -2,8 +2,12 @@ using UnityEngine;
 
 namespace BallGatherer {
     [RequireComponent(typeof(CharacterMotor))]
-    public class CharacterController : MonoBehaviour, IController {
+    public class CharacterController : LevelObject, IController {
         private CharacterMotor _motor;
+        
+        public override void Initialize(Level level) { }
+
+        public override void Prepare(Level level) { }
 
         private void Awake() {
             _motor = GetComponent<CharacterMotor>();
