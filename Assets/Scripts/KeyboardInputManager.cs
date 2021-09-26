@@ -28,7 +28,7 @@ namespace BallGatherer {
                 input.x -= 1;
             }
 
-            if (_controller != null) {
+            if (_controller != null && input != Vector2.zero) {
                 _controller.Drag(input);
             }
         }
