@@ -16,4 +16,5 @@ public class GameConfiguration : ScriptableObject {
     private static GameConfiguration _instance;
 
     public GameObject ballRes;
+    public int ballCount;
 }

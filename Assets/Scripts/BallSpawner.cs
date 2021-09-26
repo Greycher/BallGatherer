@@ -4,15 +4,12 @@ using UnityEngine;
 namespace BallGatherer {
     public class BallSpawner {
         private Stack<GameObject> _ballStack = new Stack<GameObject>();
-        private Level _level;
 
-        public void AssignContext(Level level) {
-            _level = level;
-        }
-
-        public GameObject SpawnNewBallAtPosition(Vector3 position) {
+        public GameObject SpawnNewBallAtPosition(Transform parent, Vector3 position) {
             var newBall = GetNewBall();
-            newBall.transform.position = position;
+            var tr = newBall.transform;
+            tr.position = position;
+            tr.SetParent(parent);
             newBall.SetActive(true);
             return newBall;
         }
@@ -29,7 +26,7 @@ namespace BallGatherer {
             }
             else {
                 var gameConfiguration = GameConfiguration.Instance;
-                ball = UnityEngine.Object.Instantiate(gameConfiguration.ballRes, _level.Parent);
+                ball = UnityEngine.Object.Instantiate(gameConfiguration.ballRes);
             }
             return ball;
         }

@@ -68,7 +68,7 @@ namespace BallGatherer {
         public Vector3 GetRandomPointInBounds() {
             var minPos = GetMinPosition();
             var maxPos = GetMaxPosition();
-            return new Vector3(Random.Range(minPos.x, maxPos.x), Random.Range(minPos.y, maxPos.y), 0);
+            return new Vector3(Random.Range(minPos.x, maxPos.x), 0, Random.Range(minPos.z, maxPos.z));
         }
     }
 }
