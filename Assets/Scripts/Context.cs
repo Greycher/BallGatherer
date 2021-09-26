@@ -11,13 +11,15 @@ namespace BallGatherer {
             var playerGameObject = FindPlayer(gameConfiguration.playerTag);
             
             var playerMotor = playerGameObject.GetComponent<CharacterMotor>();
-            playerMotor.AssignContext(this);
+            _border = GetComponentInChildren<RectangleBorder>();
+            playerMotor.AssignBorder(_border);
             
             var playerController = playerGameObject.GetComponent<CharacterController>();
             PrepareTargetFollowers(playerController.transform);
             PrepareInputManagers(playerController);
 
-            _border = GetComponentInChildren<RectangleBorder>();
+
+
         }
 
         private GameObject FindPlayer(string playerTag) {
@@ -46,14 +48,6 @@ namespace BallGatherer {
                 var inputManager = inputManagers[i];
                 inputManager.AssignController(playerController);
             }
-        }
-
-        public Vector3 GetBorderMinPos() {
-            return Parent.TransformPoint(_border.GetMinPosition());
-        }
-        
-        public Vector3 GetBorderMaxPos() {
-            return Parent.TransformPoint(_border.GetMaxPosition());
         }
     }
 }

@@ -17,12 +17,14 @@ namespace BallGatherer {
         private const int NonePointerID = Int32.MinValue;
 
         private RectTransform _canvasTr;
+        private Canvas _canvas;
         private Vector2 _dpi;
         private Vector2 _dragDirection;
         private int _pointerID = NonePointerID;
 
         private void Awake() {
             _dpi = GetDPI();
+            _canvas = GetComponent<Canvas>();
             _canvasTr = transform as RectTransform;
             DisableJoyPad();
         }
@@ -55,16 +57,11 @@ namespace BallGatherer {
         }
 
         private void EnableJoyPadAt(Vector2 position) {
-            joyPad.anchoredPosition = ToLocalScreenPosition(position);
+            var camera = _canvas.worldCamera;
+            var viewPoint = camera.ScreenToViewportPoint(position);
+            joyPad.anchorMin = viewPoint;
+            joyPad.anchorMax = viewPoint;
             joyPad.gameObject.SetActive(true);
-        }
-        
-        private Vector2 ToLocalScreenPosition(Vector2 position) {
-            var currResolution = new Vector2(Screen.width, Screen.height);
-            var rect = _canvasTr.rect;
-            var referenceResolution = new Vector2(rect.width, rect.height);
-            var inverseResolutionScale = referenceResolution / currResolution;
-            return position * inverseResolutionScale;
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData) {

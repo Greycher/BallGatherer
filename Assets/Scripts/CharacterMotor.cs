@@ -8,13 +8,12 @@ namespace BallGatherer {
         public float visualRad;
 
         private RectangleBorder _border;
-        private Context _context;
 
         public void Move(Vector3 direction) {
             Rotate(direction);
             var newPos = rb.position + direction * (speed * Time.deltaTime);
-            var minPos = _context.GetBorderMinPos();
-            var maxPos = _context.GetBorderMaxPos();
+            var minPos = _border.GetMinPosition();
+            var maxPos = _border.GetMaxPosition();
             newPos.x = Mathf.Clamp(newPos.x, minPos.x + visualRad, maxPos.x - visualRad);
             newPos.z = Mathf.Clamp(newPos.z, minPos.z + visualRad, maxPos.z - visualRad);
             rb.MovePosition(newPos);
@@ -24,8 +23,8 @@ namespace BallGatherer {
             rb.MoveRotation(Quaternion.LookRotation(direction));
         }
 
-        public void AssignContext(Context context) {
-            _context = context;
+        public void AssignBorder(RectangleBorder border) {
+            _border = border;
         }
     }
 }
