@@ -15,16 +15,18 @@ namespace BallGatherer {
             AssignTargetTransform(player.transform);
         }
         
+        private void AssignTargetTransform(Transform targetTr) {
+            _targetTr = targetTr;
+            _offset = transform.position - targetTr.position;
+        }
+
         private void LateUpdate() {
             if (_targetTr != null) {
                 transform.position = Vector3.Lerp(transform.position, _targetTr.position + _offset, lerpSpeed);
             }
         }
         
-        public void AssignTargetTransform(Transform targetTr) {
-            _targetTr = targetTr;
-            _offset = transform.position - targetTr.position;
-        }
+        public override void OnLevelFinish(Level level) { }
     }
 }
 

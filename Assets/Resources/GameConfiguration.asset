@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f057e50eab8254f82dff9cc10fad2f, type: 3}
   m_Name: GameConfiguration
   m_EditorClassIdentifier: 
-  ballRes: {fileID: 2056522545874043877, guid: bcbcbd17c2feebc4cbb8a37ecdd1e0ca, type: 3}
+  ballRes: {fileID: 263509530684620743, guid: bcbcbd17c2feebc4cbb8a37ecdd1e0ca, type: 3}
   ballCount: 5

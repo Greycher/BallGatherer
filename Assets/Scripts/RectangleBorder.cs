@@ -19,8 +19,6 @@ namespace BallGatherer {
         public float wallHeight;
         public float wallWidth;
 
-
-        
         public override void Initialize(Level level) {
             level.AddLevelObjectToDictionary(key, this);
         }
@@ -65,11 +63,13 @@ namespace BallGatherer {
             return transform.TransformPoint(new Vector3(width * 0.5f, 0, height * 0.5f));
         }
 
-        public Vector3 GetRandomPointInBounds() {
+        public Vector3 GetRandomPointInBounds(float visualRadius = 0) {
             var minPos = GetMinPosition();
             var maxPos = GetMaxPosition();
-            return new Vector3(Random.Range(minPos.x, maxPos.x), 0, Random.Range(minPos.z, maxPos.z));
+            return new Vector3(Random.Range(minPos.x + visualRadius, maxPos.x - visualRadius), 0 + visualRadius, Random.Range(minPos.z + visualRadius, maxPos.z - visualRadius));
         }
+        
+        public override void OnLevelFinish(Level level) { }
     }
 }
 

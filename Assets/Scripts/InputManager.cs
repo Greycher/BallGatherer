@@ -10,4 +10,6 @@ public class InputManager : LevelObject {
     public void AssignController(IController controller) {
         _controller = controller;
     }
+    
+    public override void OnLevelFinish(Level level) { }
 }
