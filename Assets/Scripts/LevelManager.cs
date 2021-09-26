@@ -66,14 +66,13 @@ namespace BallGatherer {
 
         public void IncreaseProgress(float amount) {
             _progress += amount;
-            Debug.Log($"progress: {_progress}");
             if (_progress >= 1) {
                 _level.FinishLevel();
             }
         }
 
         public override void OnLevelFinish(Level level) {
-            _uiManager.LoadGameSuccessUI();
+            _uiManager.LoadGameSuccess();
         }
     }
 }

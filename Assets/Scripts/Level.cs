@@ -4,11 +4,11 @@ using UnityEngine;
 namespace BallGatherer {
     public class Level : MonoBehaviour {
         public Transform Parent => transform;
-        public bool IsPlaying => isPlaying;
+        public bool IsPlaying => _isPlaying;
         
         private Dictionary<string, LevelObject> _levelObjectDictionary = new Dictionary<string, LevelObject>();
         private List<LevelObject> _levelObjects;
-        private bool isPlaying;
+        private bool _isPlaying;
 
         private void Awake() {
             FindLevelObjects();
@@ -28,7 +28,7 @@ namespace BallGatherer {
         }
 
         public void StartLevel() {
-            isPlaying = true;
+            _isPlaying = true;
             for (int i = 0; i < _levelObjects.Count; i++) {
                 _levelObjects[i].Prepare(this);
             }
@@ -57,7 +57,7 @@ namespace BallGatherer {
         }
 
         public void FinishLevel() {
-            isPlaying = false;
+            _isPlaying = false;
             for (int i = 0; i < _levelObjects.Count; i++) {
                 _levelObjects[i].OnLevelFinish(this);
             }

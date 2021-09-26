@@ -16,8 +16,8 @@ namespace BallGatherer {
         public Canvas canvas;
         public CanvasGroup canvasGroup;
         public RectTransform joyPad;
-        public Vector2 horizontalDragBoundsInInches = new Vector2(0.05f, 0.2f);
-        public Vector2 verticalDragBoundsInInches = new Vector2(0.05f, 0.2f);
+        public float minDragInInches = 0.1f;
+        public float maxDragInInches = 0.3f;
         
         [Header("Animations")]
         public Animator joyPadAnimator;
@@ -35,7 +35,7 @@ namespace BallGatherer {
             }
         }
 
-        private Vector2 _dpi;
+        private float _dpi;
         private Vector2 _drag;
         private int _pointerID = NonePointerID;
         
@@ -44,8 +44,7 @@ namespace BallGatherer {
             _dpi = GetDPI();
         }
         
-        private Vector2 GetDPI() {
-            Vector2 dpi;
+        private float GetDPI() {
             //Unity documents notes that dpi value could be wrong in android devices
             //See the scripting document of Screen.dpi field for the details
             if (!Application.isEditor && Application.platform == RuntimePlatform.Android) {
@@ -55,13 +54,10 @@ namespace BallGatherer {
                 AndroidJavaObject metrics = new AndroidJavaObject("android.util.DisplayMetrics");
                 activity.Call<AndroidJavaObject>("getWindowManager").Call<AndroidJavaObject>("getDefaultDisplay").Call("getMetrics", metrics);
 
-                dpi = new Vector2(metrics.Get<float>("xdpi"), metrics.Get<float>("ydpi"));
-            }
-            else {
-                dpi = new Vector2(Screen.dpi, Screen.dpi);
+                return (metrics.Get<float>("xdpi") + metrics.Get<float>("ydpi")) * 0.5f;
             }
 
-            return dpi;
+            return Screen.dpi;
         }
 
         public override void Prepare(Level level) {
@@ -92,10 +88,10 @@ namespace BallGatherer {
         
         private void Drag(Vector2 pressPosition, Vector2 pointerPosition) {
             var deltaPosition = pointerPosition - pressPosition;
-            var deltaInch = deltaPosition / _dpi;
-            _drag = new Vector2(
-                Normalize(Mathf.Abs(deltaInch.x), horizontalDragBoundsInInches.x, horizontalDragBoundsInInches.y) * Mathf.Sign(deltaInch.x),
-                Normalize(Mathf.Abs(deltaInch.y), verticalDragBoundsInInches.x, verticalDragBoundsInInches.y) * Mathf.Sign(deltaInch.y));
+            var direction = deltaPosition.normalized;
+            var deltaInch = deltaPosition.magnitude / _dpi;
+            var magnitude = Normalize(deltaInch, minDragInInches, maxDragInInches);
+            _drag = direction * magnitude;
         }
         
         private float Normalize(float value, float minValue, float maxValue, float minNormalizedValue = 0, float maxNormalizedValue = 1)

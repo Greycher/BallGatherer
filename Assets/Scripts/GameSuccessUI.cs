@@ -25,7 +25,7 @@ namespace BallGatherer {
         }
 
         private void OnPlayAgainButtonClicked() {
-            _uiManager.LoadLevelUI();
+            _uiManager.LoadLevel();
             _level.StartLevel();
         }
 

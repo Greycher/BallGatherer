@@ -10,17 +10,28 @@ namespace BallGatherer {
         private Rigidbody _rb;
         private Vector3 _initialLocalPos;
         private Quaternion _initialLocalRot;
+        private Vector3 _initialLocalScale;
 
         public override void Initialize(Level level) {
             _rb = GetComponent<Rigidbody>();
+            RecordInitialPos();
+        }
+        
+        public override void Prepare(Level level) {
+            SetToInitialPose();
+            _border = RectangleBorder.GetForLevel(level);
+        }
+        
+        private void RecordInitialPos() {
             _initialLocalPos = transform.localPosition;
             _initialLocalRot = transform.localRotation;
+            _initialLocalScale = transform.localScale;
         }
-
-        public override void Prepare(Level level) {
-            _border = RectangleBorder.GetForLevel(level);
+        
+        private void SetToInitialPose() {
             transform.localPosition = _initialLocalPos;
             transform.localRotation = _initialLocalRot;
+            transform.localScale = _initialLocalScale;
         }
 
         public void Move(Vector3 direction) {

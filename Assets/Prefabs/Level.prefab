@@ -218,8 +218,8 @@ MonoBehaviour:
   canvas: {fileID: 706014249013567545}
   canvasGroup: {fileID: 706014250614149962}
   joyPad: {fileID: 270201501368464508}
-  horizontalDragBoundsInInches: {x: 0.1, y: 0.6}
-  verticalDragBoundsInInches: {x: 0.1, y: 0.6}
+  minDragInInches: 0.02
+  maxDragInInches: 0.25
   joyPadAnimator: {fileID: 1080304059143676553}
   horizontalParamName: blendX
   verticalParamName: blendY
@@ -607,9 +607,9 @@ RectTransform:
   m_Father: {fileID: 2662553766073068559}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -15}
+  m_AnchorMin: {x: 0.5, y: 0.9}
+  m_AnchorMax: {x: 0.5, y: 0.9}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2662553765855363250
@@ -1709,7 +1709,7 @@ GameObject:
   - component: {fileID: 2662553767323996954}
   - component: {fileID: 2662553767323996957}
   - component: {fileID: 2662553767323996953}
-  - component: {fileID: 2662553767323996955}
+  - component: {fileID: 8547739062472150452}
   - component: {fileID: 2662553767323996956}
   m_Layer: 0
   m_Name: Player
@@ -1761,7 +1761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c65a43655bfd48b327632742ab2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2662553767323996955
+--- !u!114 &8547739062472150452
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1770,7 +1770,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2662553767323996958}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1423e63e002adc74c88fd457e8005b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cadb6ad3a1d1e949837aba70f71ac64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
